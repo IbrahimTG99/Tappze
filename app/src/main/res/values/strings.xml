@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Tappze</string>
+    <string name="app_logo">App Logo</string>
+    <string name="moto">It\'s not just a tap, it\'s a way of thinking.</string>
+    <string name="create_account">Create Account</string>
+    <string name="acknowledgement">Going Forward, I agree to the Privacy\nPolicy and Terms of Service</string>
+    <string name="existing_user">Existing User? Login</string>
+    <string name="welcome">Welcome back,\nSign in to <b>account</b></string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="no_accnt">Don\'t have an account? Sign Up</string>
+    <string name="back">Back</string>
+    <string name="join_text">Create your account to\njoin the network</string>
+    <string name="full_name">Full Name</string>
+    <string name="username">Username</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="policy_text">By signing up, you agree to our\n<b>Terms of Service</b> and <b>Privacy Policy</b></string>
+    <string name="username_guide">Allowed characters are a–z,0–9 Special characters are\nnot allowed</string>
+    <string name="password_guide">Your password must be 6 digits or longer</string>
+    <string name="fullname_placeholder"><b>Ibrahim Tariq Gujjar</b></string>
+    <string name="profile_settings">profile settings</string>
+    <string name="icon">icon</string>
+    <string name="phone">Phone</string>
+    <string name="about">About</string>
+    <string name="company">Company</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="scan_tag">Scan Tag</string>
+    <string name="tag_description">Your tag will be activated with your username:</string>
+    <string name="username_placeholder"><b>IbrahimTG99</b></string>
+    <string name="buy_tappze_card">Buy Tappze Card</string>
+    <string name="activate_tag">Activate Tag</string>
+    <string name="share">Share</string>
+    <string name="view_counts">View Counts</string>
+    <string name="views_placeholder"><b>0</b></string>
+    <string name="alert_msg">Alert message</string>
+    <string name="alert"><b>The status of the profile\nhas changed</b></string>
+    <string name="subscriptions">Subscriptions</string>
+    <string name="purchase_items">Purchase Items</string>
+    <string name="change_password">Change Password</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="profile_off">Profile off</string>
+    <string name="profile_on">Profile on</string>
+    <string name="placeholder_name">Instagram</string>
+    <string name="open">Open</string>
+    <string name="delete">Delete</string>
+    <string name="home">Home</string>
+    <string name="nfc">NFC</string>
+    <string name="analytics">Analytics</string>
+    <string name="settings">Settings</string>
+    <array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_in">Log In</string>
+    <string name="send">Send</string>
+    <string name="forgot_pass_prompt">Enter your email address to reset\npassword</string>
+</resources>
