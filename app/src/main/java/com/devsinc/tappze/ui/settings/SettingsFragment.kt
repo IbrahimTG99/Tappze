@@ -1,18 +1,14 @@
 package com.devsinc.tappze.ui.settings
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.devsinc.tappze.R
 import com.devsinc.tappze.databinding.FragmentSettingsBinding
-import com.devsinc.tappze.databinding.FragmentSignUpBinding
 import com.devsinc.tappze.ui.BindingFragment
-import com.devsinc.tappze.ui.auth.AuthViewModel
 
 class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
