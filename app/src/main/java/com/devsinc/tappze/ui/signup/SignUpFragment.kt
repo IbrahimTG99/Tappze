@@ -97,10 +97,15 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
                         // add user data to db
                         viewModel.addUserToDatabase(binding.etName.text.toString())
                         findNavController().navigate(R.id.profileFragment)
+                        requireActivity().findViewById<View>(R.id.bottom_nav_view).visibility =
+                            View.VISIBLE
                     }
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), "Sign Up Failed", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error: ${it.exception.message.toString()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         binding.progressBar.visibility = View.GONE
                     }
                     is Resource.Loading -> {

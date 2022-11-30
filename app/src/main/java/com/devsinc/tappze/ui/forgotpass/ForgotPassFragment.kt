@@ -33,9 +33,8 @@ class ForgotPassFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        binding = FragmentForgotPassBinding.bind(view)
         viewModel = ViewModelProvider(this)[ForgotPassViewModel::class.java]
+        binding = FragmentForgotPassBinding.bind(view)
 
         binding.btnSend.setOnClickListener {
             if (binding.etForgotPassEmail.text.toString().trim().isEmpty()) {

@@ -81,9 +81,16 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
                         Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT)
                             .show()
                         findNavController().navigate(R.id.action_signInFragment_to_profileFragment)
+                        // access bottom nav view and make it visible
+                        requireActivity().findViewById<View>(R.id.bottom_nav_view).visibility =
+                            View.VISIBLE
                     }
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), "Login Failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error: ${it.exception.message.toString()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         binding.progressBar.visibility = View.GONE
                     }
                     is Resource.Loading -> {
