@@ -1,7 +1,10 @@
 package com.devsinc.tappze
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import com.devsinc.tappze.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -10,22 +13,49 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Initialize Firebase Auth
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         auth = Firebase.auth
 
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding.bottomNavView.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_home -> {
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.profileFragment)
+                    true
+                }
+                R.id.nav_nfc -> {
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.nfcFragment)
+                    true
+                }
+                R.id.nav_share -> {
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.shareFragment)
+                    true
+                }
+                R.id.nav_analytics -> {
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.analyticsFragment)
+                    true
+                }
+                R.id.nav_settings -> {
+                    findNavController(R.id.nav_host_fragment).navigate(R.id.settingsFragment)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
-    public override fun onStart() {
+    override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-        if(currentUser != null){
-            // todo
+        if (currentUser != null) {
+            binding.bottomNavView.visibility = View.VISIBLE
+            // navigate to profile fragment
+            findNavController(R.id.nav_host_fragment).navigate(R.id.profileFragment)
         }
     }
 }

@@ -30,7 +30,6 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
 
         binding.ivBack.setOnClickListener {
@@ -38,11 +37,54 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
         }
 
         binding.btnSignUp.setOnClickListener {
-            viewModel.signUp(
-                binding.etName.text.toString(),
-                binding.etEmail.text.toString(),
-                binding.etPassword.text.toString()
-            )
+            var error = false
+
+            if (binding.etName.text.toString().isEmpty()) {
+                binding.etName.error = "Name is required"
+                error = true
+            }
+
+            if (binding.etUsername.text.toString().isEmpty()) {
+                binding.etUsername.error = "Username is required"
+                error = true
+            }
+
+            if (binding.etEmail.text.toString().isEmpty()) {
+                binding.etEmail.error = "Email is required"
+                error = true
+            }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(binding.etEmail.text.toString())
+                    .matches()
+            ) {
+                binding.etEmail.error = "Please enter a valid email address"
+                error = true
+            }
+
+            if (binding.etPassword.text.toString()
+                    .isEmpty() || binding.etPassword.text.toString().length < 6
+            ) {
+                binding.etPassword.error = "Password must be at least 6 characters"
+                error = true
+            }
+
+            if (binding.etConfirmPassword.text.toString().isEmpty()) {
+                binding.etConfirmPassword.error = "Confirm password is required"
+                error = true
+            }
+
+            if (binding.etPassword.text.toString() != binding.etConfirmPassword.text.toString()) {
+                binding.etConfirmPassword.error = "Passwords do not match"
+                error = true
+            }
+
+            if (!error) {
+                viewModel.signUp(
+                    binding.etEmail.text.toString().trim(),
+                    binding.etPassword.text.toString().trim(),
+                    binding.etUsername.text.toString().trim()
+                )
+            }
         }
 
         lifecycleScope.launchWhenStarted {
@@ -51,11 +93,19 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
                     is Resource.Success -> {
                         Toast.makeText(requireContext(), "Sign Up Successful", Toast.LENGTH_SHORT)
                             .show()
+
+                        // add user data to db
+                        viewModel.addUserToDatabase(binding.etName.text.toString())
                         findNavController().navigate(R.id.profileFragment)
+                        requireActivity().findViewById<View>(R.id.bottom_nav_view).visibility =
+                            View.VISIBLE
                     }
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), "Sign Up Failed", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error: ${it.exception.message.toString()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         binding.progressBar.visibility = View.GONE
                     }
                     is Resource.Loading -> {
@@ -70,7 +120,5 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
                 }
             }
         }
-
     }
-
 }

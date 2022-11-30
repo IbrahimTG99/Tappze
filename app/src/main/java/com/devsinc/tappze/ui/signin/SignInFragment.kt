@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
@@ -22,7 +22,7 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
         fun newInstance() = SignInFragment()
     }
 
-    private val viewModel: SignInViewModel by viewModels()
+    private lateinit var viewModel: SignInViewModel
 
     override val bindingInflater: (LayoutInflater) -> ViewBinding
         get() = FragmentSignInBinding::inflate
@@ -31,16 +31,7 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnSignIn.setOnClickListener {
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                viewModel.login(email, password)
-            }
-        }
+        viewModel = ViewModelProvider(this)[SignInViewModel::class.java]
 
         binding.ivBack.setOnClickListener {
             activity?.onBackPressedDispatcher?.onBackPressed()
@@ -57,6 +48,32 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
             forgotPassBottomSheet.show(parentFragmentManager, ForgotPassFragment.TAG)
         }
 
+        binding.btnSignIn.setOnClickListener {
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
+
+            var error = false
+
+            if (email.isEmpty()) {
+                binding.etEmail.error = "Email is required"
+                error = true
+            }
+
+            if (password.isEmpty()) {
+                binding.etPassword.error = "Password is required"
+                error = true
+            }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                binding.etEmail.error = "Invalid email"
+                error = true
+            }
+
+            if (!error) {
+                viewModel.login(email, password)
+            }
+        }
+
         lifecycleScope.launchWhenStarted {
             viewModel.loginFlow.collect {
                 when (it) {
@@ -64,9 +81,16 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
                         Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT)
                             .show()
                         findNavController().navigate(R.id.action_signInFragment_to_profileFragment)
+                        // access bottom nav view and make it visible
+                        requireActivity().findViewById<View>(R.id.bottom_nav_view).visibility =
+                            View.VISIBLE
                     }
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), "Login Failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error: ${it.exception.message.toString()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         binding.progressBar.visibility = View.GONE
                     }
                     is Resource.Loading -> {
@@ -82,5 +106,4 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
             }
         }
     }
-
 }
