@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     tools:context=".ui.editinfo.EditInfoFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:cardCornerRadius="16dp" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottom_sheet"
@@ -39,7 +39,8 @@
                 android:layout_marginTop="8dp"
                 android:src="@drawable/ic_baseline_arrow_down_24"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/app_name" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_app_logo"
@@ -47,7 +48,7 @@
                 android:layout_height="128dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"
-                android:src="@drawable/ic_insta"
+                android:src="@drawable/ic_phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title" />

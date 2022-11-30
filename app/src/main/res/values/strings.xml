@@ -51,6 +51,7 @@
     <string name="nfc">NFC</string>
     <string name="analytics">Analytics</string>
     <string name="settings">Settings</string>
+
     <array name="gender_array">
         <item>Male</item>
         <item>Female</item>
@@ -62,4 +63,5 @@
     <string name="send">Send</string>
     <string name="forgot_pass_prompt">Enter your email address to reset\npassword</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="select_dob">Select DOB</string>
 </resources>

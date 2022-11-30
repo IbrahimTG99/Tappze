@@ -44,13 +44,17 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addUserToDatabase(fullName: String) {
-        val user = firebaseAuth.currentUser
-        val userData = UserData(user?.uid!!, fullName, mutableMapOf())
-        firebaseDatabase.child("users").child(user.uid).setValue(userData)
+        val userData = UserData(user?.uid!!, fullName, infoMap =  mutableMapOf())
+        firebaseDatabase.child("users").child(user?.uid!!).setValue(userData)
     }
 
-    override suspend fun logout() {
-        firebaseAuth.signOut()
+    override suspend fun logout(): Resource<String> {
+        return try {
+            firebaseAuth.signOut()
+            Resource.Success("Logout")
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 
     override suspend fun resetPassword(email: String): Resource<String> {

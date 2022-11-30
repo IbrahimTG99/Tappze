@@ -2,6 +2,8 @@ package com.devsinc.tappze.di
 
 import com.devsinc.tappze.data.AuthRepository
 import com.devsinc.tappze.data.AuthRepositoryImpl
+import com.devsinc.tappze.data.ProfileRepository
+import com.devsinc.tappze.data.ProfileRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -25,4 +27,7 @@ class AppModule {
 
     @Provides
     fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository = impl
+
+    @Provides
+    fun provideProfileRepository(impl: ProfileRepositoryImpl): ProfileRepository = impl
 }
