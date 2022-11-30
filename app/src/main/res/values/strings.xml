@@ -61,4 +61,5 @@
     <string name="log_in">Log In</string>
     <string name="send">Send</string>
     <string name="forgot_pass_prompt">Enter your email address to reset\npassword</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>
