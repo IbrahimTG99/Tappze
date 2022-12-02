@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.devsinc.tappze.R
@@ -17,12 +18,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class ForgotPassFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentForgotPassBinding
+    private val viewModel: ForgotPassViewModel by viewModels()
 
     companion object {
         const val TAG = "ModalBottomSheet"
     }
-
-    private lateinit var viewModel: ForgotPassViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +33,6 @@ class ForgotPassFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[ForgotPassViewModel::class.java]
         binding = FragmentForgotPassBinding.bind(view)
 
         binding.btnSend.setOnClickListener {

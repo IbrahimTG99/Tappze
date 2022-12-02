@@ -27,6 +27,19 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getUserDatabaseInfo(): Resource<HashMap<String, String>> {
+        return try {
+            var infoMap = firebaseDatabase.child("users").child(user?.uid!!).child("infoMap").get()
+                .await().value as HashMap<String, String>?
+            if (infoMap == null) {
+                infoMap = HashMap<String, String>()
+            }
+            Resource.Success(infoMap)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
+    }
+
     override suspend fun updateUserDatabase(userData: UserData): Resource<String> {
         return try {
             firebaseDatabase.child("users").child(user?.uid!!).setValue(userData).await()
@@ -53,6 +66,21 @@ class ProfileRepositoryImpl @Inject constructor(
         return try {
             user?.updatePassword(password)?.await()
             Resource.Success("Password updated")
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
+    }
+
+    override suspend fun updateUserDatabaseInfo(appName: String, appUrl: String): Resource<String> {
+        return try {
+            var infoMap = firebaseDatabase.child("users").child(user?.uid!!).child("infoMap").get().await().value as HashMap<String, String>?
+            if (infoMap == null) {
+                infoMap = HashMap<String, String>()
+            }
+            infoMap[appName] = appUrl
+            firebaseDatabase.child("users").child(user?.uid!!).child("infoMap").setValue(infoMap).await()
+
+            Resource.Success("Info updated")
         } catch (e: Exception) {
             Resource.Error(e)
         }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     tools:context=".ui.editinfo.EditInfoFragment">
 
@@ -21,22 +22,22 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_title"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_margin = "16dp"
                 android:text="@string/placeholder_name"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="32sp"
-                app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/iv_arrow"
+                android:id="@+id/iv_close"
                 android:layout_width="64dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/ic_baseline_arrow_down_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -44,10 +45,10 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_app_logo"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:src="@drawable/ic_phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 app:boxBackgroundColor="@color/accent"
                 app:boxStrokeColor="@color/black"
@@ -75,7 +76,6 @@
                     android:id="@+id/et_app_url"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/placeholder_name"
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black" />

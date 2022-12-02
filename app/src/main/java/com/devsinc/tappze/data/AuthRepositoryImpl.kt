@@ -44,8 +44,8 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addUserToDatabase(fullName: String) {
-        val userData = UserData(user?.uid!!, fullName, infoMap =  mutableMapOf())
-        firebaseDatabase.child("users").child(user?.uid!!).setValue(userData)
+        val userData = UserData(user?.uid!!, fullName, infoMap = mutableMapOf())
+        firebaseDatabase.child("users").child(user?.uid!!).setValue(userData).await()
     }
 
     override suspend fun logout(): Resource<String> {
@@ -61,6 +61,29 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             firebaseAuth.sendPasswordResetEmail(email).await()
             Resource.Success("Email sent")
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
+    }
+
+    override suspend fun updateProfileStatus(status: Boolean): Resource<Boolean> {
+        return try {
+            firebaseDatabase.child("users").child(user?.uid!!).child("profileStatus").setValue(status).await()
+            Resource.Success(status)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
+    }
+
+    override suspend fun getProfileStatus(): Resource<Boolean> {
+        return try {
+            var profileStatus = firebaseDatabase.child("users").child(user?.uid!!).child("profileStatus").get()
+                .await().value as Boolean?
+            if (profileStatus == null) {
+                profileStatus = false
+                firebaseDatabase.child("users").child(user?.uid!!).child("profileStatus").setValue(profileStatus).await()
+            }
+            Resource.Success(profileStatus)
         } catch (e: Exception) {
             Resource.Error(e)
         }

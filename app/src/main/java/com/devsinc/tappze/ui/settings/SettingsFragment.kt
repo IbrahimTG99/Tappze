@@ -61,12 +61,32 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
             if (isChecked) {
                 when (checkedId) {
                     R.id.btn_profile_on -> {
-                        Toast.makeText(requireContext(), "Profile turned on", Toast.LENGTH_SHORT)
-                            .show()
+                        viewModel.updateProfileStatus(true)
                     }
                     R.id.btn_profile_off -> {
-                        Toast.makeText(requireContext(), "Profile turned off", Toast.LENGTH_SHORT)
-                            .show()
+                        viewModel.updateProfileStatus(false)
+                    }
+                }
+            }
+
+            lifecycleScope.launchWhenStarted {
+                viewModel.getStatusFlow.collect {
+                    when (it) {
+                        is Resource.Success -> {
+                            if (it.result) {
+                                binding.toggleGroup.check(R.id.btn_profile_on)
+                            } else {
+                                binding.toggleGroup.check(R.id.btn_profile_off)
+                            }
+                        }
+                        is Resource.Error -> {
+                            Toast.makeText(
+                                requireContext(),
+                                "Error: ${it.exception.message.toString()}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        else -> {}
                     }
                 }
             }

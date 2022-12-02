@@ -17,6 +17,14 @@ class SettingsViewModel @Inject constructor(
     private val _logoutFlow = MutableStateFlow<Resource<String>?>(null)
     val getDatabaseFlow = _logoutFlow
 
+    private val _getStatusFlow = MutableStateFlow<Resource<Boolean>?>(null)
+    val getStatusFlow = _getStatusFlow
+
+    fun updateProfileStatus(status: Boolean) = viewModelScope.launch {
+        _getStatusFlow.value = Resource.Loading
+        _getStatusFlow.value = repository.updateProfileStatus(status)
+    }
+
     fun logout() = viewModelScope.launch {
         _logoutFlow.value = Resource.Loading
         val result = repository.logout()

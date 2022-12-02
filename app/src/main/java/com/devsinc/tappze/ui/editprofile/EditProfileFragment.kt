@@ -1,13 +1,19 @@
 package com.devsinc.tappze.ui.editprofile
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.OnBackPressedDispatcher
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.devsinc.tappze.R
@@ -16,6 +22,7 @@ import com.devsinc.tappze.databinding.FragmentEditProfileBinding
 import com.devsinc.tappze.model.AppIcon
 import com.devsinc.tappze.model.UserData
 import com.devsinc.tappze.ui.BindingFragment
+import com.devsinc.tappze.ui.editinfo.EditInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,13 +37,13 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
 
     private lateinit var imageId: Array<Int>
     private lateinit var appName: Array<String>
+    private lateinit var userData: UserData
 
     override val bindingInflater: (LayoutInflater) -> ViewBinding
         get() = FragmentEditProfileBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         val adapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
             requireContext(), R.array.gender_array, android.R.layout.simple_spinner_item
@@ -49,12 +56,8 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
         binding.recyclerView.adapter = editAdapter
         editAdapter.setOnItemClickListener(object : RecyclerAdapterEdit.OnItemClickListener {
             override fun onItemClick(position: Int) {
-                // Toast with the app name of the selected app
-                Toast.makeText(
-                    requireContext(),
-                    "You selected ${appIconArrayList[position].name}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val editAppInfoBottomSheet = EditInfoFragment(appIconArrayList[position])
+                editAppInfoBottomSheet.show(parentFragmentManager, EditInfoFragment.TAG)
             }
         })
 
@@ -70,6 +73,7 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
                         val spinnerPosition: Int = adapter.getPosition(event.result.gender)
                         binding.spGender.setSelection(spinnerPosition)
                         binding.btnDateOfBirth.text = event.result.birthDate
+                        userData = event.result
                     }
                     is Resource.Error -> {
                         Toast.makeText(
@@ -95,14 +99,14 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
 
         binding.btnSave.setOnClickListener {
             val user = UserData(
-                (viewModel.user?.uid ?: ""),
                 binding.etFullName.text.toString(),
                 binding.etAbout.text.toString(),
                 binding.etPhone.text.toString(),
                 binding.etCompany.text.toString(),
                 binding.spGender.selectedItem.toString(),
                 binding.btnDateOfBirth.text.toString(),
-                null
+                // get data somehow
+                userData.infoMap
             )
 
             viewModel.updateUserDatabase(user)
@@ -113,7 +117,8 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
                         is Resource.Success -> {
                             Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
                             // back to profile
-                            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                            findNavController().navigateUp()
+
                         }
                         is Resource.Error -> {
                             Toast.makeText(
@@ -128,8 +133,14 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
             }
         }
 
+        binding.profileImage.setOnClickListener {
+            // @TODO: add image picker
+        }
+
         binding.btnCancel.setOnClickListener {
-            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+            // go back
+            findNavController().navigateUp()
+//            OnBackPressedDispatcher().onBackPressed()
         }
     }
 

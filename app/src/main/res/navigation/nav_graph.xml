@@ -63,28 +63,17 @@
         android:id="@+id/editInfoFragment"
         android:name="com.devsinc.tappze.ui.editinfo.EditInfoFragment"
         android:label="fragment_edit_info"
-        tools:layout="@layout/fragment_edit_info">
-        <action
-            android:id="@+id/action_editInfoFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_edit_info"/>
     <fragment
         android:id="@+id/alertFragment"
         android:name="com.devsinc.tappze.ui.alert.AlertFragment"
         android:label="fragment_alert"
-        tools:layout="@layout/fragment_alert">
-        <action
-            android:id="@+id/action_alertFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_alert"/>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.devsinc.tappze.ui.editprofile.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile">
-        <action
-            android:id="@+id/action_editProfileFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
         <action
             android:id="@+id/action_editProfileFragment_to_editInfoFragment"
             app:destination="@id/editInfoFragment" />
@@ -117,9 +106,5 @@
         android:id="@+id/forgotPassFragment"
         android:name="com.devsinc.tappze.ui.forgotpass.ForgotPassFragment"
         android:label="fragment_forgot_pass"
-        tools:layout="@layout/fragment_forgot_pass" >
-        <action
-            android:id="@+id/action_forgotPassFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_forgot_pass" />
 </navigation>

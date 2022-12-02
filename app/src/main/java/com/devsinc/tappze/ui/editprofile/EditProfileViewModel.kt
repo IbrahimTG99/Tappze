@@ -34,9 +34,9 @@ class EditProfileViewModel @Inject constructor(
         _updateDatabaseFlow.value = result
     }
 
-//    fun updateUserImage(imageUrl: String) = viewModelScope.launch {
-//        _updateDatabaseFlow.value = Resource.Loading
-//        val result = repository.updateUserImage(imageUrl)
-//        _updateDatabaseFlow.value = result
-//    }
+    fun updateUserImage(imageUrl: String) = viewModelScope.launch {
+        _updateDatabaseFlow.value = Resource.Loading
+        val result = repository.updateUserImage(imageUrl)
+        _updateDatabaseFlow.value = result
+    }
 }

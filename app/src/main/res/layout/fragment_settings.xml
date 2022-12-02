@@ -73,26 +73,23 @@
         android:layout_gravity="center"
         android:layout_marginTop="64dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/accent2"
         app:checkedButton="@+id/btn_profile_on"
         app:selectionRequired="true"
-        app:singleSelection="true">
+        app:singleSelection="true" >
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_profile_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
             android:text="@string/profile_off"
-            android:textColor="@color/black" />
+            android:textSize="12sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_profile_on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
             android:text="@string/profile_on"
-            android:textColor="@color/black" />
+            android:textSize="12sp" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
