@@ -41,14 +41,13 @@ class DisplayInfoFragment(private var appInfo: AppIcon?) : BottomSheetDialogFrag
 
         appInfo?.let { binding.ivAppLogo.setImageResource(it.icon) }
         binding.tvTitle.text = appInfo?.name ?: "No name"
-        binding.etAppUrl.hint = appInfo?.name
         viewModel.getUserDatabaseInfo()
 
         lifecycleScope.launchWhenStarted {
             viewModel.getDatabaseInfoFlow.collect {
                 when (it) {
                     is Resource.Success -> {
-                        binding.etAppUrl.setText(it.result[appInfo?.name])
+                        binding.tvAppUrl.text = it.result[appInfo?.name]
                         appUrls = it.result
                     }
                     is Resource.Error -> {
