@@ -9,4 +9,6 @@ interface AuthRepository {
     suspend fun addUserToDatabase(fullName: String)
     suspend fun logout(): Resource<String>
     suspend fun resetPassword(email: String): Resource<String>
+    suspend fun updateProfileStatus(status: Boolean): Resource<Boolean>
+    suspend fun getProfileStatus(): Resource<Boolean>
 }

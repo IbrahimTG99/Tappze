@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,7 +23,7 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
         fun newInstance() = SignInFragment()
     }
 
-    private lateinit var viewModel: SignInViewModel
+    private val viewModel: SignInViewModel by viewModels()
 
     override val bindingInflater: (LayoutInflater) -> ViewBinding
         get() = FragmentSignInBinding::inflate
@@ -30,8 +31,6 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[SignInViewModel::class.java]
 
         binding.ivBack.setOnClickListener {
             activity?.onBackPressedDispatcher?.onBackPressed()

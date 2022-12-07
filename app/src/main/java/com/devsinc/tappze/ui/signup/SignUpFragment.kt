@@ -44,9 +44,10 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
                 error = true
             }
 
-            if (binding.etUsername.text.toString().isEmpty()) {
-                binding.etUsername.error = "Username is required"
+            if (binding.etUsername.text.toString().isEmpty() || !binding.etUsername.text.toString().matches(Regex("^[a-z0-9]*\$"))) {
+                binding.etUsername.error = "Username is required and only a-z and 0-9 are allowed"
                 error = true
+                binding.etUsername.requestFocus()
             }
 
             if (binding.etEmail.text.toString().isEmpty()) {

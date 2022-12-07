@@ -11,4 +11,5 @@
     <color name="accent2">#e3fc02</color>
     <color name="red">#FF0000</color>
     <color name="orange">#FFA500</color>
+    <color name="invisible">#00000000</color>
 </resources>

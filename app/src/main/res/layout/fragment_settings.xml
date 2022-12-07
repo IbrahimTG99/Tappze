@@ -1,99 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:orientation="vertical"
+    android:fillViewport="true"
     tools:context=".ui.settings.SettingsFragment">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="128dp"
-        android:contentDescription="@string/app_logo"
-        android:src="@drawable/ic_logo_white" />
-
-    <TextView
-        android:id="@+id/tv_subscription"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:gravity="center"
-        android:text="@string/subscriptions"
-        android:textColor="@color/white"
-        android:textSize="32sp" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_purchase"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="@string/purchase_items"
-        android:textColor="@color/white"
-        android:textSize="32sp" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="128dp"
+            android:contentDescription="@string/app_logo"
+            android:src="@drawable/ic_logo_white" />
 
-    <TextView
-        android:id="@+id/tv_change_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="@string/change_password"
-        android:textColor="@color/white"
-        android:textSize="32sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_Contact_us"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="@string/contact_us"
-        android:textColor="@color/white"
-        android:textSize="32sp" />
 
-    <TextView
-        android:id="@+id/tv_sign_out"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="@string/sign_out"
-        android:textColor="@color/accent2"
-        android:textSize="32sp" />
+            <TextView
+                android:id="@+id/tv_subscription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/subscriptions"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/toggleGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/accent2"
-        app:checkedButton="@+id/btn_profile_on"
-        app:selectionRequired="true"
-        app:singleSelection="true">
+            <TextView
+                android:id="@+id/tv_purchase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/purchase_items"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_profile_off"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:text="@string/profile_off"
-            android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/tv_change_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/change_password"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_profile_on"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:text="@string/profile_on"
-            android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/tv_Contact_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/contact_us"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
 
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            <TextView
+                android:id="@+id/tv_sign_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/sign_out"
+                android:textColor="@color/accent2"
+                android:textSize="32sp" />
 
-</LinearLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="64dp"
+                android:layout_marginBottom="16dp"
+                app:checkedButton="@+id/btn_profile_off"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_profile_off"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:text="@string/profile_off"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_profile_on"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:text="@string/profile_on"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
