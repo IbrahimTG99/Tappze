@@ -22,6 +22,9 @@ class EditInfoViewModel @Inject constructor(
     private val _getDatabaseInfoFlow = MutableStateFlow<Resource<HashMap<String, String>>?>(null)
     val getDatabaseInfoFlow = _getDatabaseInfoFlow
 
+    private val _deleteDatabaseInfoFlow = MutableStateFlow<Resource<String>?>(null)
+    val deleteDatabaseInfoFlow = _deleteDatabaseInfoFlow
+
     fun updateUserDatabaseInfo(appName: String, appUrl: String) = viewModelScope.launch {
         _updateDatabaseFlow.value = Resource.Loading
         val result = repository.updateUserDatabaseInfo(appName, appUrl)
@@ -32,6 +35,12 @@ class EditInfoViewModel @Inject constructor(
         _getDatabaseInfoFlow.value = Resource.Loading
         val result = repository.getUserDatabaseInfo()
         _getDatabaseInfoFlow.value = result
+    }
+
+    fun deleteUserDatabaseInfo(appName: String) = viewModelScope.launch {
+        _deleteDatabaseInfoFlow.value = Resource.Loading
+        val result = repository.deleteUserDatabaseInfo(appName)
+        _deleteDatabaseInfoFlow.value = result
     }
 
 }

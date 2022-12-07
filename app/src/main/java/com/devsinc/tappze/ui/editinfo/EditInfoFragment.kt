@@ -1,5 +1,7 @@
 package com.devsinc.tappze.ui.editinfo
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +21,7 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
 
     private lateinit var binding: FragmentEditInfoBinding
     private val viewModel: EditInfoViewModel by viewModels()
+    private lateinit var appUrls : MutableMap<String, String>
 
     companion object {
         const val TAG = "ModalBottomSheet"
@@ -47,6 +50,7 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
                 when (it) {
                     is Resource.Success -> {
                         binding.etAppUrl.setText(it.result[appInfo.name])
+                        appUrls = it.result
                     }
                     is Resource.Error -> {
                         Toast.makeText(requireContext(), it.exception.message.toString(), Toast.LENGTH_SHORT).show()
@@ -64,6 +68,39 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
 
         binding.btnSave.setOnClickListener {
             viewModel.updateUserDatabaseInfo(binding.tvTitle.text.toString(), binding.etAppUrl.text.toString())
+        }
+
+        binding.btnDelete.setOnClickListener {
+            viewModel.deleteUserDatabaseInfo(binding.tvTitle.text.toString())
+        }
+
+        binding.btnOpenUrl.setOnClickListener {
+            val launchIntent: Intent? =
+                this.context?.packageManager?.getLaunchIntentForPackage("com.google.android.${appInfo.name.lowercase()}")
+            if (launchIntent != null) {
+                launchIntent.putExtra(Intent.ACTION_VIEW, Uri.parse("https://www.${appInfo.name.lowercase()}.com/${appUrls[appInfo.name]}"))
+                startActivity(launchIntent)
+            } else {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.${appInfo.name.lowercase()}.com/${appUrls[appInfo.name]}"))
+                context?.startActivity(intent)
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.deleteDatabaseInfoFlow.collect {
+                when (it) {
+                    is Resource.Success -> {
+                        Toast.makeText(requireContext(), it.result, Toast.LENGTH_SHORT).show()
+                        dismiss()
+                    }
+                    is Resource.Error -> {
+                        Toast.makeText(requireContext(), it.exception.message.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                    is Resource.Loading -> {
+                    }
+                    else -> {}
+                }
+            }
         }
 
         lifecycleScope.launchWhenStarted {

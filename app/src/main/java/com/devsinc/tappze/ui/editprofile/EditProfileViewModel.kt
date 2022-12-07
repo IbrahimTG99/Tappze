@@ -1,5 +1,6 @@
 package com.devsinc.tappze.ui.editprofile
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devsinc.tappze.data.ProfileRepository
@@ -22,6 +23,9 @@ class EditProfileViewModel @Inject constructor(
     private val _getDatabaseFlow = MutableStateFlow<Resource<UserData>?>(null)
     val getDatabaseFlow = _getDatabaseFlow
 
+    private val _updateImageFlow = MutableStateFlow<Resource<Uri>?>(null)
+    val updateImageFlow = _updateImageFlow
+
     fun getUserDatabase() = viewModelScope.launch {
         _getDatabaseFlow.value = Resource.Loading
         val result = repository.getUserDatabase()
@@ -34,9 +38,9 @@ class EditProfileViewModel @Inject constructor(
         _updateDatabaseFlow.value = result
     }
 
-    fun updateUserImage(imageUrl: String) = viewModelScope.launch {
-        _updateDatabaseFlow.value = Resource.Loading
-        val result = repository.updateUserImage(imageUrl)
-        _updateDatabaseFlow.value = result
+    fun updateUserImage(imageUrl: Uri?) = viewModelScope.launch {
+        _updateImageFlow.value = Resource.Loading
+        val result = repository.updateUserImage(imageUrl!!)
+        _updateImageFlow.value = result
     }
 }

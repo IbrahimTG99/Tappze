@@ -1,5 +1,6 @@
 package com.devsinc.tappze.data
 
+import com.devsinc.tappze.data.utils.Constants
 import com.devsinc.tappze.data.utils.await
 import com.devsinc.tappze.model.UserData
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +20,8 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun login(email: String, password: String): Resource<FirebaseUser> {
         return try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            Constants.userLoggedIn = firebaseDatabase.child("users").child(result.user?.uid!!)
+                .get().await().getValue(UserData::class.java)
             Resource.Success(result.user!!)
         } catch (e: Exception) {
             Resource.Error(e)
@@ -44,13 +47,15 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addUserToDatabase(fullName: String) {
-        val userData = UserData(user?.uid!!, fullName, infoMap = mutableMapOf())
+        val userData = UserData(fullName = fullName, infoMap = hashMapOf())
+        Constants.userLoggedIn = userData
         firebaseDatabase.child("users").child(user?.uid!!).setValue(userData).await()
     }
 
     override suspend fun logout(): Resource<String> {
         return try {
             firebaseAuth.signOut()
+            Constants.userLoggedIn = null
             Resource.Success("Logout")
         } catch (e: Exception) {
             Resource.Error(e)
@@ -68,7 +73,13 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun updateProfileStatus(status: Boolean): Resource<Boolean> {
         return try {
-            firebaseDatabase.child("users").child(user?.uid!!).child("profileStatus").setValue(status).await()
+            if (Constants.userLoggedIn == null) {
+                Constants.userLoggedIn = firebaseDatabase.child("users").child(user?.uid!!)
+                    .get().await().getValue(UserData::class.java)
+            }
+            Constants.userLoggedIn!!.profileStatus = status
+            firebaseDatabase.child("users").child(user?.uid!!).child("profileStatus")
+                .setValue(status).await()
             Resource.Success(status)
         } catch (e: Exception) {
             Resource.Error(e)
@@ -77,13 +88,16 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun getProfileStatus(): Resource<Boolean> {
         return try {
-            var profileStatus = firebaseDatabase.child("users").child(user?.uid!!).child("profileStatus").get()
-                .await().value as Boolean?
-            if (profileStatus == null) {
-                profileStatus = false
-                firebaseDatabase.child("users").child(user?.uid!!).child("profileStatus").setValue(profileStatus).await()
+            if (Constants.userLoggedIn == null) {
+                Constants.userLoggedIn = firebaseDatabase.child("users").child(user?.uid!!)
+                    .get().await().getValue(UserData::class.java)
             }
-            Resource.Success(profileStatus)
+            if (Constants.userLoggedIn?.profileStatus == null) {
+                Constants.userLoggedIn?.profileStatus = false
+                firebaseDatabase.child("users").child(user?.uid!!).child("profileStatus")
+                    .setValue(Constants.userLoggedIn?.profileStatus).await()
+            }
+            Resource.Success(Constants.userLoggedIn?.profileStatus!!)
         } catch (e: Exception) {
             Resource.Error(e)
         }

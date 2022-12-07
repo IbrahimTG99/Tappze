@@ -7,6 +7,7 @@ data class UserData(
     val company: String ?= null,
     val gender: String ?= null,
     val birthDate: String ?= null,
-    val infoMap: MutableMap<String, String> ?= null,
-    val profileStatus: Boolean ?= null
+    var infoMap: HashMap<String, String> ?= null,
+    var profileStatus: Boolean ?= null,
+    var profileImage: String ?= null
 )

@@ -1,44 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/accent"
+    android:fillViewport="true"
     tools:context=".ui.share.ShareFragment">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:layout_margin="48dp"
-        android:src="@drawable/ic_launcher_background"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:layout_margin="24dp"
-        android:src="@drawable/ic_launcher_background" />
-
-    <TextView
-        android:id="@+id/tv_link"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="https://profile.tappze.ca\n/HGOxbnjjkvhbvgvb ghvbvbb3"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:layout_margin="24dp"
-        android:textSize="18sp" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_share"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:backgroundTint="@color/black"
-        android:text="@string/share" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="match_parent"
+            android:layout_height="128dp"
+            android:layout_margin="48dp"
+            android:src="@drawable/ic_baseline_account_circle_24"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
 
-</LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/iv_qr_code"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:layout_margin="24dp"
+                android:src="@drawable/ic_launcher_background"
+                android:contentDescription="@string/views_placeholder" />
+
+            <TextView
+                android:id="@+id/tv_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:text="https://profile.tappze.ca\n/HGOxbnjjkvhbvgvb ghvbvbb3"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btn_share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:backgroundTint="@color/black"
+                android:text="@string/share" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

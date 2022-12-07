@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import com.devsinc.tappze.data.utils.Constants
 import com.devsinc.tappze.databinding.ActivityMainBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
@@ -53,8 +54,13 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         if (Firebase.auth.currentUser != null) {
             binding.bottomNavView.visibility = View.VISIBLE
-            // navigate to profile fragment
-            findNavController(R.id.nav_host_fragment).navigate(R.id.profileFragment)
+            // navigate to profile fragment if on welcome fragment
+            if (findNavController(R.id.nav_host_fragment).currentDestination?.id == R.id.welcomeFragment) {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_welcomeFragment_to_profileFragment)
+            }
+            if (Constants.userLoggedIn == null) {
+
+            }
         }
     }
 }
