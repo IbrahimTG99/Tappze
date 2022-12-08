@@ -176,6 +176,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_margin="16dp"
+                app:layout_constraintHeight_min="240dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintBottom_toTopOf="@id/btn_save"
                 app:layout_constraintEnd_toEndOf="parent"

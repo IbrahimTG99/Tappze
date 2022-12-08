@@ -3,16 +3,16 @@ package com.devsinc.tappze.ui.signin
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.devsinc.tappze.R
 import com.devsinc.tappze.data.Resource
+import com.devsinc.tappze.data.utils.Constants
 import com.devsinc.tappze.databinding.FragmentSignInBinding
 import com.devsinc.tappze.ui.BindingFragment
+import com.devsinc.tappze.ui.alert.AlertFragment
 import com.devsinc.tappze.ui.forgotpass.ForgotPassFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,16 +55,23 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
 
             if (email.isEmpty()) {
                 binding.etEmail.error = "Email is required"
+                binding.etEmail.requestFocus()
+                // open keyboard
+                Constants.openKeyboard(binding.etEmail, requireContext())
                 error = true
             }
 
             if (password.isEmpty()) {
                 binding.etPassword.error = "Password is required"
+                binding.etPassword.requestFocus()
+                Constants.openKeyboard(binding.etPassword, requireContext())
                 error = true
             }
 
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 binding.etEmail.error = "Invalid email"
+                binding.etEmail.requestFocus()
+                Constants.openKeyboard(binding.etEmail, requireContext())
                 error = true
             }
 
@@ -77,19 +84,19 @@ class SignInFragment : BindingFragment<FragmentSignInBinding>() {
             viewModel.loginFlow.collect {
                 when (it) {
                     is Resource.Success -> {
-                        Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT)
-                            .show()
+//                        val msg = Resource.Success("Login Successful")
+//                        val dialog = AlertFragment(msg, "Success")
+//                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                         findNavController().navigate(R.id.action_signInFragment_to_profileFragment)
                         // access bottom nav view and make it visible
                         requireActivity().findViewById<View>(R.id.bottom_nav_view).visibility =
                             View.VISIBLE
+                        // close keyboard
+                        Constants.closeKeyboard(view, requireContext())
                     }
                     is Resource.Error -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error: ${it.exception.message.toString()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val dialog = AlertFragment(it, "Login Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                         binding.progressBar.visibility = View.GONE
                     }
                     is Resource.Loading -> {

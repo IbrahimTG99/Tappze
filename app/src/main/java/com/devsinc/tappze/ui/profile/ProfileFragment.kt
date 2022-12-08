@@ -4,7 +4,6 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,6 +16,7 @@ import com.devsinc.tappze.databinding.FragmentProfileBinding
 import com.devsinc.tappze.model.AppIcon
 import com.devsinc.tappze.model.UserData
 import com.devsinc.tappze.ui.BindingFragment
+import com.devsinc.tappze.ui.alert.AlertFragment
 import com.devsinc.tappze.ui.displayinfo.DisplayInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,13 +47,24 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                         userData = event.result
                         val profileAdapter = RecyclerAdapterProfile(userData.infoMap)
                         binding.rvProfilelinks.adapter = profileAdapter
-                        profileAdapter.setOnItemClickListener(object : RecyclerAdapterProfile.OnItemClickListener {
+                        profileAdapter.setOnItemClickListener(object :
+                            RecyclerAdapterProfile.OnItemClickListener {
                             override fun onItemClick(position: Int) {
-                                val displayInfoFragment = DisplayInfoFragment(userData.infoMap?.keys?.let {
-                                    Constants.getImage(
-                                        it.elementAt(position))
-                                }?.let { AppIcon(it, userData.infoMap?.keys!!.elementAt(position)) })
-                                displayInfoFragment.show(parentFragmentManager, DisplayInfoFragment.TAG)
+                                val displayInfoFragment =
+                                    DisplayInfoFragment(userData.infoMap?.keys?.let {
+                                        Constants.getImage(
+                                            it.elementAt(position)
+                                        )
+                                    }?.let {
+                                        AppIcon(
+                                            it,
+                                            userData.infoMap?.keys!!.elementAt(position)
+                                        )
+                                    })
+                                displayInfoFragment.show(
+                                    parentFragmentManager,
+                                    DisplayInfoFragment.TAG
+                                )
                             }
                         })
                         binding.progressIndicator.visibility = View.GONE
@@ -67,11 +78,8 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                         }
                     }
                     is Resource.Error -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error: ${event.exception.message.toString()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val dialog = AlertFragment(event, "Error Loading Profile")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                     }
                     else -> {}
                 }

@@ -1,13 +1,19 @@
 package com.devsinc.tappze.data.utils
 
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
 import com.devsinc.tappze.R
 import com.devsinc.tappze.model.AppIcon
 import com.devsinc.tappze.model.UserData
+import com.google.android.material.textfield.TextInputEditText
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -15,48 +21,6 @@ object Constants {
 
     @Singleton
     var userLoggedIn: UserData? = null
-
-    @Singleton
-    val imageId = arrayOf(
-        R.drawable.ic_facebook,
-        R.drawable.ic_twitter,
-        R.drawable.ic_linkedin,
-        R.drawable.ic_snapchat,
-        R.drawable.ic_youtube,
-        R.drawable.ic_tiktok,
-        R.drawable.ic_pinterest,
-        R.drawable.ic_whatsapp,
-        R.drawable.ic_telegram,
-        R.drawable.ic_vimeo,
-        R.drawable.ic_website,
-        R.drawable.ic_spotify,
-        R.drawable.ic_phone,
-        R.drawable.ic_email,
-        R.drawable.ic_calendly,
-        R.drawable.ic_paypal,
-        R.drawable.ic_instagram
-    )
-
-    @Singleton
-    val appName = arrayOf(
-        "Facebook",
-        "Twitter",
-        "LinkedIn",
-        "Snapchat",
-        "Youtube",
-        "TikTok",
-        "Pinterest",
-        "Whatsapp",
-        "Telegram",
-        "Vimeo",
-        "Website",
-        "Spotify",
-        "Phone",
-        "Email",
-        "Calendly",
-        "Paypal",
-        "Instagram"
-    )
 
     @Singleton
     val appIconArrayList = listOf<AppIcon>(
@@ -81,9 +45,8 @@ object Constants {
 
     @Provides
     @Singleton
-    fun getImage(appName: String): Int
-    {
-        return when(appName) {
+    fun getImage(appName: String): Int {
+        return when (appName) {
             "Facebook" -> R.drawable.ic_facebook
             "Twitter" -> R.drawable.ic_twitter
             "LinkedIn" -> R.drawable.ic_linkedin
@@ -103,6 +66,22 @@ object Constants {
             "Instagram" -> R.drawable.ic_instagram
             else -> R.drawable.ic_facebook
         }
+    }
+
+    @Provides
+    @Singleton
+    fun openKeyboard(textInputLayout: TextInputEditText, context: Context): Boolean {
+        val imm = ContextCompat.getSystemService(context, InputMethodManager::class.java)
+        imm?.showSoftInput(textInputLayout, InputMethodManager.SHOW_IMPLICIT)
+        return true
+    }
+
+    @Provides
+    @Singleton
+    fun closeKeyboard(view: View, context: Context): Boolean {
+        val imm = ContextCompat.getSystemService(context, InputMethodManager::class.java)
+        imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        return true
     }
 
     @Provides

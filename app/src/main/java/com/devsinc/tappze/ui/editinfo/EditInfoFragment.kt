@@ -6,22 +6,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.devsinc.tappze.R
 import com.devsinc.tappze.data.Resource
+import com.devsinc.tappze.data.utils.Constants
 import com.devsinc.tappze.databinding.FragmentEditInfoBinding
 import com.devsinc.tappze.model.AppIcon
+import com.devsinc.tappze.ui.alert.AlertFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentEditInfoBinding
     private val viewModel: EditInfoViewModel by viewModels()
-    private lateinit var appUrls : MutableMap<String, String>
+    private lateinit var appUrls: MutableMap<String, String>
 
     companion object {
         const val TAG = "ModalBottomSheet"
@@ -42,7 +44,7 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
 
         binding.ivAppLogo.setImageResource(appInfo.icon)
         binding.tvTitle.text = appInfo.name
-        binding.etAppUrl.hint = appInfo.name
+        binding.tilName.hint = appInfo.name
         viewModel.getUserDatabaseInfo()
 
         lifecycleScope.launchWhenStarted {
@@ -53,7 +55,8 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
                         appUrls = it.result
                     }
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), it.exception.message.toString(), Toast.LENGTH_SHORT).show()
+                        val dialog = AlertFragment(it, "Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                     }
                     is Resource.Loading -> {
                     }
@@ -67,7 +70,16 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
         }
 
         binding.btnSave.setOnClickListener {
-            viewModel.updateUserDatabaseInfo(binding.tvTitle.text.toString(), binding.etAppUrl.text.toString())
+            if (binding.etAppUrl.text.toString() != "") {
+                viewModel.updateUserDatabaseInfo(
+                    binding.tvTitle.text.toString(),
+                    binding.etAppUrl.text.toString()
+                )
+            } else {
+                binding.etAppUrl.error = "Field cannot be empty"
+                binding.etAppUrl.requestFocus()
+                Constants.openKeyboard(binding.etAppUrl, requireContext())
+            }
         }
 
         binding.btnDelete.setOnClickListener {
@@ -78,10 +90,16 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
             val launchIntent: Intent? =
                 this.context?.packageManager?.getLaunchIntentForPackage("com.google.android.${appInfo.name.lowercase()}")
             if (launchIntent != null) {
-                launchIntent.putExtra(Intent.ACTION_VIEW, Uri.parse("https://www.${appInfo.name.lowercase()}.com/${appUrls[appInfo.name]}"))
+                launchIntent.putExtra(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.${appInfo.name.lowercase()}.com/${appUrls[appInfo.name]}")
+                )
                 startActivity(launchIntent)
             } else {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.${appInfo.name.lowercase()}.com/${appUrls[appInfo.name]}"))
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.${appInfo.name.lowercase()}.com/${appUrls[appInfo.name]}")
+                )
                 context?.startActivity(intent)
             }
         }
@@ -90,11 +108,13 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
             viewModel.deleteDatabaseInfoFlow.collect {
                 when (it) {
                     is Resource.Success -> {
-                        Toast.makeText(requireContext(), it.result, Toast.LENGTH_SHORT).show()
+                        val dialog = AlertFragment(it, "Done")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                         dismiss()
                     }
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), it.exception.message.toString(), Toast.LENGTH_SHORT).show()
+                        val dialog = AlertFragment(it, "Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                     }
                     is Resource.Loading -> {
                     }
@@ -107,11 +127,13 @@ class EditInfoFragment(private var appInfo: AppIcon) : BottomSheetDialogFragment
             viewModel.updateDatabaseFlow.collect { status ->
                 when (status) {
                     is Resource.Success -> {
-                        Toast.makeText(requireContext(), status.result.toString(), Toast.LENGTH_SHORT).show()
+                        val dialog = AlertFragment(status, "Done")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                         dismiss()
                     }
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), status.exception.toString(), Toast.LENGTH_SHORT).show()
+                        val dialog = AlertFragment(status, "Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                         dismiss()
                     }
                     is Resource.Loading -> {

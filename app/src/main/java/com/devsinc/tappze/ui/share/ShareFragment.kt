@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +14,7 @@ import com.devsinc.tappze.R
 import com.devsinc.tappze.data.Resource
 import com.devsinc.tappze.databinding.FragmentShareBinding
 import com.devsinc.tappze.ui.BindingFragment
+import com.devsinc.tappze.ui.alert.AlertFragment
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
@@ -50,11 +50,8 @@ class ShareFragment : BindingFragment<FragmentShareBinding>() {
                         }
                     }
                     is Resource.Error -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error: ${event.exception.message.toString()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val dialog = AlertFragment(event, "Error Loading User Data")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                     }
                     else -> {}
                 }
@@ -68,12 +65,21 @@ class ShareFragment : BindingFragment<FragmentShareBinding>() {
     private fun getQrCodeBitmap(ssid: String, password: String): Bitmap {
         val size = 512 //pixels
         val qrCodeContent = "WIFI:S:$ssid;T:WPA;P:$password;;"
-        val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 } // Make the QR code buffer border narrower
+        val hints = hashMapOf<EncodeHintType, Int>().also {
+            it[EncodeHintType.MARGIN] = 1
+        } // Make the QR code buffer border narrower
         val bits = QRCodeWriter().encode(qrCodeContent, BarcodeFormat.QR_CODE, size, size)
         return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
             for (x in 0 until size) {
                 for (y in 0 until size) {
-                    it.setPixel(x, y, if (bits[x, y]) Color.BLACK else ContextCompat.getColor(requireContext(), R.color.accent))
+                    it.setPixel(
+                        x,
+                        y,
+                        if (bits[x, y]) Color.BLACK else ContextCompat.getColor(
+                            requireContext(),
+                            R.color.accent
+                        )
+                    )
                 }
             }
         }

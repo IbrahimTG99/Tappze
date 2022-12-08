@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.devsinc.tappze.R
 import com.devsinc.tappze.data.Resource
 import com.devsinc.tappze.databinding.FragmentForgotPassBinding
+import com.devsinc.tappze.ui.alert.AlertFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,24 +50,18 @@ class ForgotPassFragment : BottomSheetDialogFragment() {
             viewModel.resetFlow.collect { event ->
                 when (event) {
                     is Resource.Success -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Password reset email sent",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val msg = Resource.Success("Password reset email sent")
+                        val dialog = AlertFragment(msg, "Success")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                         dismiss()
                     }
                     is Resource.Error -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error: ${event.exception.message.toString()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val dialog = AlertFragment(event, "Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                         dismiss()
                     }
                     is Resource.Loading -> {
                         // do nothing
-//                        Toast.makeText(requireContext(), "Password email on its way", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
                         // do nothing
