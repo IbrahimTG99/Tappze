@@ -1,21 +1,22 @@
 package com.devsinc.tappze.ui.alert
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import com.devsinc.tappze.R
 import com.devsinc.tappze.data.Resource
 import com.devsinc.tappze.databinding.FragmentAlertBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AlertFragment(private val alert: Resource<String>?, private val title: String) : DialogFragment() {
+class AlertFragment(private val alert: Resource<String>?, private val title: String) :
+    DialogFragment() {
 
     private lateinit var binding: FragmentAlertBinding
-    private val viewModel: AlertViewModel by viewModels()
 
     companion object {
         const val TAG = "AlertFragment"
@@ -26,6 +27,7 @@ class AlertFragment(private val alert: Resource<String>?, private val title: Str
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return inflater.inflate(R.layout.fragment_alert, container, false)
     }
 
@@ -37,7 +39,7 @@ class AlertFragment(private val alert: Resource<String>?, private val title: Str
         binding.alertTitle.text = title
 
         if (alert is Resource.Success) {
-            binding.alertMessage.text = alert.result.toString()
+            binding.alertMessage.text = alert.result
             binding.alertMessage.textSize = 12f
             binding.alertImage.setImageResource(R.drawable.ic_baseline_done_outline_24)
         } else if (alert is Resource.Error) {

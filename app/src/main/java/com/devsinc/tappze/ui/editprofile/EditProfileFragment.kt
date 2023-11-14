@@ -20,12 +20,14 @@ import com.devsinc.tappze.data.utils.Constants
 import com.devsinc.tappze.databinding.FragmentEditProfileBinding
 import com.devsinc.tappze.model.UserData
 import com.devsinc.tappze.ui.BindingFragment
+import com.devsinc.tappze.ui.alert.AlertFragment
 import com.devsinc.tappze.ui.editinfo.EditInfoFragment
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.Exception
 
 @AndroidEntryPoint
 class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
@@ -56,7 +58,9 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
                 binding.progressBar.visibility = View.VISIBLE
                 viewModel.updateUserImage(mProfileUri)
             } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                Toast.makeText(this.context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+                val msg = Resource.Error(Exception(ImagePicker.getError(data)))
+                val dialog = AlertFragment(msg, "Error while picking image")
+                dialog.show(parentFragmentManager, AlertFragment.TAG)
             } else {
                 Toast.makeText(this.context, "Task Cancelled", Toast.LENGTH_SHORT).show()
             }
@@ -105,11 +109,8 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
                         userData = event.result
                     }
                     is Resource.Error -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error: ${event.exception.message.toString()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val dialog = AlertFragment(event, "Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                     }
                     else -> {}
                 }
@@ -120,6 +121,7 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
             val datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select date")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setTheme(R.style.DatePickerTheme)
                 .setCalendarConstraints(
                     CalendarConstraints.Builder().setValidator(
                         DateValidatorPointBackward.now()
@@ -155,17 +157,16 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
                 viewModel.updateDatabaseFlow.collect { event ->
                     when (event) {
                         is Resource.Success -> {
-                            Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                            val msg = Resource.Success("Profile updated successfully")
+                            val dialog = AlertFragment(msg, "Done")
+                            dialog.show(parentFragmentManager, AlertFragment.TAG)
                             // back to profile
                             findNavController().navigateUp()
 
                         }
                         is Resource.Error -> {
-                            Toast.makeText(
-                                requireContext(),
-                                "Error: ${event.exception.message.toString()}",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            val dialog = AlertFragment(event, "Error")
+                            dialog.show(parentFragmentManager, AlertFragment.TAG)
                         }
                         else -> {}
                     }
@@ -180,18 +181,14 @@ class EditProfileFragment : BindingFragment<FragmentEditProfileBinding>() {
                         binding.progressBar.visibility = View.GONE
                         binding.btnSave.isEnabled = true
                         userData.profileImage = event.result.toString()
-                        Toast.makeText(
-                            requireContext(),
-                            "Profile image uploaded",
-                            Toast.LENGTH_LONG
-                        ).show()
+
+                        val msg = Resource.Success("Profile image uploaded")
+                        val dialog = AlertFragment(msg, "Done")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                     }
                     is Resource.Error -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error: ${event.exception.message.toString()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val dialog = AlertFragment(event, "Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                     }
                     is Resource.Loading -> {
                         binding.btnSave.isEnabled = false

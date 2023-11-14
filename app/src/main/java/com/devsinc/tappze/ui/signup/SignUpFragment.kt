@@ -3,15 +3,16 @@ package com.devsinc.tappze.ui.signup
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.devsinc.tappze.R
 import com.devsinc.tappze.data.Resource
+import com.devsinc.tappze.data.utils.Constants
 import com.devsinc.tappze.databinding.FragmentSignUpBinding
 import com.devsinc.tappze.ui.BindingFragment
+import com.devsinc.tappze.ui.alert.AlertFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,6 +42,9 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
 
             if (binding.etName.text.toString().isEmpty()) {
                 binding.etName.error = "Name is required"
+                binding.etName.requestFocus()
+                // open keyboard
+                Constants.openKeyboard(binding.etName, requireContext())
                 error = true
             }
 
@@ -48,10 +52,15 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
                 binding.etUsername.error = "Username is required and only a-z and 0-9 are allowed"
                 error = true
                 binding.etUsername.requestFocus()
+                // open keyboard
+                Constants.openKeyboard(binding.etUsername, requireContext())
             }
 
             if (binding.etEmail.text.toString().isEmpty()) {
                 binding.etEmail.error = "Email is required"
+                binding.etEmail.requestFocus()
+                // open keyboard
+                Constants.openKeyboard(binding.etEmail, requireContext())
                 error = true
             }
 
@@ -59,6 +68,9 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
                     .matches()
             ) {
                 binding.etEmail.error = "Please enter a valid email address"
+                binding.etEmail.requestFocus()
+                // open keyboard
+                Constants.openKeyboard(binding.etEmail, requireContext())
                 error = true
             }
 
@@ -66,16 +78,25 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
                     .isEmpty() || binding.etPassword.text.toString().length < 6
             ) {
                 binding.etPassword.error = "Password must be at least 6 characters"
+                binding.etPassword.requestFocus()
+                // open keyboard
+                Constants.openKeyboard(binding.etPassword, requireContext())
                 error = true
             }
 
             if (binding.etConfirmPassword.text.toString().isEmpty()) {
                 binding.etConfirmPassword.error = "Confirm password is required"
+                binding.etConfirmPassword.requestFocus()
+                // open keyboard
+                Constants.openKeyboard(binding.etConfirmPassword, requireContext())
                 error = true
             }
 
             if (binding.etPassword.text.toString() != binding.etConfirmPassword.text.toString()) {
                 binding.etConfirmPassword.error = "Passwords do not match"
+                binding.etConfirmPassword.requestFocus()
+                // open keyboard
+                Constants.openKeyboard(binding.etConfirmPassword, requireContext())
                 error = true
             }
 
@@ -92,21 +113,23 @@ class SignUpFragment : BindingFragment<FragmentSignUpBinding>() {
             viewModel.signUpFlow.collect {
                 when (it) {
                     is Resource.Success -> {
-                        Toast.makeText(requireContext(), "Sign Up Successful", Toast.LENGTH_SHORT)
-                            .show()
+//                        Toast.makeText(requireContext(), "Sign Up Successful", Toast.LENGTH_SHORT)
+//                            .show()
+                        val msg = Resource.Success("Signup Successful")
+                        val dialog = AlertFragment(msg, "Success")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
 
                         // add user data to db
                         viewModel.addUserToDatabase(binding.etName.text.toString())
                         findNavController().navigate(R.id.profileFragment)
                         requireActivity().findViewById<View>(R.id.bottom_nav_view).visibility =
                             View.VISIBLE
+                        // close keyboard
+                        Constants.closeKeyboard(view, requireContext())
                     }
                     is Resource.Error -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error: ${it.exception.message.toString()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val dialog = AlertFragment(it, "Signup Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                         binding.progressBar.visibility = View.GONE
                     }
                     is Resource.Loading -> {

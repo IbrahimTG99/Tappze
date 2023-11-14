@@ -64,4 +64,5 @@
     <string name="forgot_pass_prompt">Enter your email address to reset\npassword</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="select_dob">Select DOB</string>
+    <string name="ok">OK</string>
 </resources>

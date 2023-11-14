@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.devsinc.tappze.R
 import com.devsinc.tappze.data.Resource
 import com.devsinc.tappze.databinding.FragmentDisplayInfoBinding
 import com.devsinc.tappze.model.AppIcon
+import com.devsinc.tappze.ui.alert.AlertFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DisplayInfoFragment(private var appInfo: AppIcon?) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentDisplayInfoBinding
     private val viewModel: DisplayInfoViewModel by viewModels()
-    private lateinit var appUrls : MutableMap<String, String>
+    private lateinit var appUrls: MutableMap<String, String>
 
     companion object {
         const val TAG = "ModalBottomSheet"
@@ -41,18 +41,18 @@ class DisplayInfoFragment(private var appInfo: AppIcon?) : BottomSheetDialogFrag
 
         appInfo?.let { binding.ivAppLogo.setImageResource(it.icon) }
         binding.tvTitle.text = appInfo?.name ?: "No name"
-        binding.etAppUrl.hint = appInfo?.name
         viewModel.getUserDatabaseInfo()
 
         lifecycleScope.launchWhenStarted {
             viewModel.getDatabaseInfoFlow.collect {
                 when (it) {
                     is Resource.Success -> {
-                        binding.etAppUrl.setText(it.result[appInfo?.name])
+                        binding.tvAppUrl.text = it.result[appInfo?.name]
                         appUrls = it.result
                     }
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), it.exception.message.toString(), Toast.LENGTH_SHORT).show()
+                        val dialog = AlertFragment(it, "Error")
+                        dialog.show(parentFragmentManager, AlertFragment.TAG)
                     }
                     is Resource.Loading -> {
                     }
@@ -69,10 +69,16 @@ class DisplayInfoFragment(private var appInfo: AppIcon?) : BottomSheetDialogFrag
             val launchIntent: Intent? =
                 this.context?.packageManager?.getLaunchIntentForPackage("com.google.android.${appInfo?.name?.lowercase()}")
             if (launchIntent != null) {
-                launchIntent.putExtra(Intent.ACTION_VIEW, Uri.parse("https://www.${appInfo?.name?.lowercase()}.com/${appUrls[appInfo?.name]}"))
+                launchIntent.putExtra(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.${appInfo?.name?.lowercase()}.com/${appUrls[appInfo?.name]}")
+                )
                 startActivity(launchIntent)
             } else {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.${appInfo?.name?.lowercase()}.com/${appUrls[appInfo?.name]}"))
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.${appInfo?.name?.lowercase()}.com/${appUrls[appInfo?.name]}")
+                )
                 context?.startActivity(intent)
             }
         }
