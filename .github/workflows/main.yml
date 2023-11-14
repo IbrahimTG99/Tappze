@@ -22,7 +22,6 @@ jobs:
       - run: ./gradlew lint
       - uses: yutailang0119/action-android-lint@v3
         with:
-          ignore-warnings: true
           report-path: build/reports/*.xml
 
   unit-test:
