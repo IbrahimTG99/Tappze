@@ -13,11 +13,17 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
 
-      - name: Upload html test report
-        uses: actions/upload-artifact@v3
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          name: lint.html
-          path: app/build/reports/lintResults/
+          distribution: zulu
+          java-version: 11
+          cache: gradle
+      - run: ./gradlew lint
+      - uses: yutailang0119/action-android-lint@v3
+        with:
+          ignore-warnings: true
+          report-path: build/reports/*.xml
 
   unit-test:
     needs: [lint]
@@ -45,9 +51,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: zulu
           java-version: 11
+          cache: gradle
 
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
