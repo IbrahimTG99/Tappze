@@ -25,7 +25,6 @@ jobs:
           report-path: build/reports/*.xml
 
   unit-test:
-    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
@@ -42,7 +41,7 @@ jobs:
 
 
   package:
-    needs: [unit-test]
+    needs: [unit-test, lint]
     name: Generate APK
     runs-on: ubuntu-latest
     steps:
